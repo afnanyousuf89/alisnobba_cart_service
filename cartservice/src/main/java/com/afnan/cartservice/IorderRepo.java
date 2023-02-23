@@ -1,7 +1,6 @@
 package com.afnan.cartservice;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 public interface IorderRepo extends JpaRepository<order, Long> {
     // // @Query("SELECT 1")

@@ -3,6 +3,7 @@ package com.afnan.cartservice;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import static org.mockito.BDDMockito.*;
@@ -12,11 +13,18 @@ import org.hibernate.sql.ast.tree.expression.Collation;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 @SpringBootTest
 class CartserviceApplicationTests {
 
+
+	
 	@Mock
 	private IorderRepo orderRepo;
 
@@ -138,5 +146,27 @@ class CartserviceApplicationTests {
 		orderRepo.deleteById(Id);
 		verify(orderRepo, times(1)).deleteById(Id);
 	}
+
+
+
+	@MockBean
+    private IorderRepo MockBeanIrepo;
+    @Test
+    public void testSaveOrder() {
+        // Arrange
+		order order1 = new order(1,1,20,12345,1);
+		order order2 = new order(2,5,12,12345,1);
+		
+        List<order> orderList = Arrays.asList(order1,order2);
+        Mockito.when(MockBeanIrepo.saveAll(any())).thenReturn(orderList);
+
+        // Act
+		RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8081/order", orderList, String.class);
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Order Saved", response.getBody());
+    }
 
 }
