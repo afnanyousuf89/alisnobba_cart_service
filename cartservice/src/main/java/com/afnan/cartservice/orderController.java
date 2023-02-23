@@ -14,13 +14,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("order")
 public class orderController {
 
-    @Autowired
-    private IorderRepo repo;
+	@Autowired
+	private IorderRepo repo;
 
-    @PostMapping("")
-    public String saveOrder(@RequestBody List<order> orders) {
-        repo.saveAll(orders);
-        return "Order Saved";
-    }
+	@PostMapping("")
+	public String saveOrder(@RequestBody List<order> orders) {
+		// for (order order : orders) {
+		// 	order.setOid(repo.getMaxOId());
+		// }
+		repo.saveAll(orders);
+		return "Order Saved";
+	}
 
 }
